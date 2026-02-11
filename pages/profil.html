@@ -1,24 +1,58 @@
-<DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-    <link rel="stylesheet" href="../css/style.css">
     <meta charset="UTF-8">
     <title>Profil - RecoMédia</title>
-
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-<header>
-<h1>Profil utilisateur</h1>
-</header>
-<p>Pseudo : 
-<u1>
-    <li>Film / Série / Animé 1</li>
-    <li>Film / Série / Animé 2</li>
-</u1>
-<h2>Mes commentaires</h2>
-<p>Liste des commentaires publiés par l'utilisateur.</p>
+    <header>
+        <h1>Mon Profil</h1>
+    </header>
 
-<a href="../index.html">Retour à l'accueil</a>
+    <nav>
+        <a href="../index.html"><i class="fas fa-home"></i>Accueil</a>
+        <a href="dashboard.html"><i class="fas fa-clapperboard"></i>Tableau de Bord</a>
+        <a href="ajouter-contenu.html"><i class="fas fa-plus-circle"></i>Ajouter</a>
+        <a href="login.html">Déconnexion</a>
+    </nav>
+
+    <main>
+        <div class="container"> 
+            <section class="profile-header">
+                <div class="profile-avatar">
+                    <span>S</span> 
+                </div>
+                <div class="profile-info">
+                    <h2>Shelly-Linda</h2>
+                    <p>Membre passionné de cinéma</p>
+                </div>
+            </section>
+        <section>
+            <h2>Mes recommandations</h2>
+            <p>Voici les contenus que vous avez aimés :</p>
+            <ul>
+                <li><strong>Inception</strong> (Film) - ⭐⭐⭐⭐</li>
+                <li><strong>One Piece</strong> (Animé) - ⭐⭐⭐⭐⭐</li>
+            </ul>
+            
+            <br>
+            <a href="dashboard.html" style="background: var(--primary); color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none; font-weight: bold;">
+                <i class="fas fa-cog"></i> Gérer mes contenus
+            </a>
+        </section>
+
+        <section>
+            <h2>Mes derniers commentaires</h2>
+            <div class="comment" style="border-left: 4px solid var(--primary); padding-left: 10px; background: #f9f9f9; margin-bottom: 10px;">
+                <p><em>"Un chef-d'œuvre absolu, à voir absolument !"</em> — sur <strong>Inception</strong></p>
+            </div>
+        </section>
+
+        <p style="text-align: center;"><a href="../index.html">← Retour à l'accueil</a></p>
+    </main>
+
+    <footer>2026 - RecoMédia</footer>
 </body>
 </html>
-</DOCTYPE>

@@ -1,29 +1,60 @@
-<DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
     <link rel="stylesheet" href="css/style.css">
-    <meta charset=""UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta charset="UTF-8">
     <title>RecoMédia</title>
 </head>
 <body>
 
 <header>
-    <h1>RecoMédia</h1>
+    <h1><i class="fas fa-film"></i> RecoMédia</h1>
+    <p style="color: #777;">Votre bibliothèque culturelle personnelle</p>
 </header>
-
 <nav>
-    <a href="index.html">Accueil</a>
-    <a href="pages/login.html">Connexion</a>
-    <a href="pages/register.html">Inscription</a>
-    <a href="pages/profil.html">Profil utilisateur</a>
-    <a href="pages/ajouter-contenu.html">Ajout un contenu</a>
+    <a href="index.html"><i class="fas fa-home"></i>Accueil</a>
+    <a href="pages/dashboard.html"><i class="fas fa-clapperboard"></i>Tableau de Bord</a>
+    <a href="pages/profil.html"><i class="fas fa-user-circle"></i>Profil utilisateur</a>
+    <a href="pages/ajouter-contenu.html"><i class="fas fa-plus-circle"></i>Ajout un contenu</a>
+    <a href="pages/login.html"><i class="fas fa-sign-in-alt"></i>Connexion</a>
+
 </nav>
 <main>
-    <h2>Bienvenue sur RecoMédia</h2>
-    <p>Vous ne savez pas quoi visionner ? RecoMédia vous aide à faire votre choix.
+    <div class="container">
+    <section class="bienvenue">
+        <h2>Bienvenue sur RecoMédia</h2>
+        <p>Vous ne savez pas quoi visionner ? RecoMédia vous aide à faire votre choix.
         Grâce aux recommendations et aux avis des utilisateurs, découvrez de nouveaux films, séries et animés et partagez votre avis en toute liberté!  </p>
-    <p><strong> Votre prochaine découverte commence ici.</strong></p>
+        <p><strong> Votre prochaine découverte commence ici.</strong></p>
+    </section>
+
+    <h2 class="section-title">Contenus récents</h2>
+
+    <div class="grid-container">
+        <article class="card">
+            <div class="card-badge">Film</div>
+            <div class="card-image" style="background-color: #ddd; height: 150px; border-radius: 8px;"></div>
+            <div class="card-content">
+            <h3>Inception</h3>
+                <p class="note">Note : ⭐⭐⭐⭐(4/5)</p>
+                <a href="pages/detail.html" class="btn-detail">Voir détails</a>
+            <div>
+        </article>
+
+        <article class="card">
+            <div class="card-badge">Animé</div>
+            <div class="card-image" style="background-color: #ddd; height: 150px; border-radius: 8px;"></div>
+            <div class="card-content">
+                <h3>One Piece</h3>
+                <p class="note">Note : ⭐⭐⭐⭐⭐(5/5)</p>
+                <a href="pages/detail.html" class="btn-detail">Voir détails</a>
+            <div>
+        </article>
+    </div>
+</div>
 </main>
+
 <footer> 2026-RecoMédia</footer>
 </body>
 </html>

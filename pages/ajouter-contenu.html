@@ -1,31 +1,39 @@
-<DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
-<head></head>
+<head>
     <meta charset="UTF-8">
     <title>Ajouter un contenu - RecoMédia</title>
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-</header>
-<h1>Ajouter un contenu</h1>
-</header>
-<form>
-    <nav>
-    <label>Titre:</label><br>
-    <input type="text" name="titre"><br><br>
-    <label>Type :</label><br>
-    <select name="type">
-        <option>Film</option>
-        <option>Série</option>
-        <option>Animé</option>
+    <header>
+        <h1>Ajouter un contenu</h1>
+    </header>
 
-        <label>Synopsis:</label>
-        <textarea name="synopsis" ></textarea><br><br>
-        <input type="number" min="1" max="5"><br><br>
-        <button type="submit">Ajouter</button>
-    <nav>
-</form>
-<a href="../index.html">Retour à l'accueil</a>
+    <main>
+        <section>
+            <form action="#" method="POST">
+                <label for="titre">Titre :</label><br>
+                <input type="text" id="titre" name="titre" required><br><br>
+
+                <label for="type">Type :</label><br>
+                <select id="type" name="type">
+                    <option value="film">Film</option>
+                    <option value="serie">Série</option>
+                    <option value="anime">Animé</option>
+                </select><br><br>
+
+                <label for="synopsis">Synopsis :</label><br>
+                <textarea id="synopsis" name="synopsis" rows="4"></textarea><br><br>
+
+                <label for="note">Note (1 à 5) :</label><br>
+                <input type="number" id="note" name="note" min="1" max="5"><br><br>
+
+                <button type="submit" class="btn-submit">Ajouter à la base</button>
+            </form>
+        </section>
+        <a href="../index.html">Retour à l'accueil</a>
+    </main>
 </body>
 </html>
-</DOCTYPE>

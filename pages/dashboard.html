@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Tableau de bord - RecoMédia</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <h1>Mon Tableau de Bord</h1>
+    </header>
+
+    <nav>
+        <a href="../index.html"><i class="fas fa-home"></i>Accueil</a>
+        <a href="ajouter-contenu.html"><i class="fas fa-plus-circle"></i>Ajouter un contenu</a>
+        <a href="profil.html"><i class="fas fa-user-circle"></i>Mon Profil</a>
+    </nav>
+
+    <main>
+        <section>
+            <h2>Mes Contenus Ajoutés</h2>
+            <p>Voici la liste des films, séries et animés que vous avez partagés. [cite: 37]</p>
+            
+            <table class="dashboard-table">
+                <thead>
+                    <tr>
+                        <th>Affiche</th>
+                        <th>Titre</th>
+                        <th>Type</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><img src="https://via.placeholder.com/50x75" alt="miniature"></td>
+                        <td>Inception</td>
+                        <td>Film</td>
+                        <td>
+                            <button class="btn-edit">Modifier</button>
+                            <button class="btn-delete">Supprimer</button>
+                        </td>
+                    </tr>
+                    </tbody>
+            </table>
+        </section>
+    </main>
+</body>
+</html>
