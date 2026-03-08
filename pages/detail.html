@@ -41,23 +41,17 @@
                 <div class="comment">
                     <p><strong>@JeanDupont :</strong> Un chef-d'œuvre absolu !</p>
                 </div>
-                
-                <hr>
-
+                <div id="ListeCommentaire"></div>
                 <h3>Ajouter votre avis</h3>
                 <form>
                     <label>Votre note :</label>
-                    <input type="number" min="1" max="5" value="5">
+                    <input type="number" id="maNote" min="1" max="5" value="5">
                     <label>Votre commentaire :</label>
-                    <textarea placeholder="Qu'avez-vous pensé de ce contenu ?"></textarea>
-                    <button type="submit">Publier mon avis</button>
+                    <textarea id="nouveauCommentaire" placeholder="Qu'avez-vous pensé de ce contenu ?"></textarea>
+                    <button type="button" onclick="ajouterAvis()">Publier mon avis</button>
+    
                 </form>
             </section>
         </article>
-        
-        <p style="text-align: center;"><a href="../index.html">← Retour à la liste</a></p>
-    </main>
-
-    <footer>2026 - RecoMédia</footer>
+    <script src="../js/script.js"></script>
 </body>
-</html>
