@@ -89,7 +89,8 @@ $result = mysqli_query($conn, $query);
                 <tbody>
                     <?php while ($row = mysqli_fetch_assoc($result)) { ?>
                         <tr>
-                            <td><img src="<?php echo $row['image']; ?>" width="50" style="border-radius: 5px;"alt="Affiche"></td>
+                            <td><img src="<?php echo $row['image']; ?>" width="50" style="border-radius: 5px;"
+                                    alt="Affiche"></td>
                             <td style="font-weight: bold;"><?php echo htmlspecialchars($row['titre']); ?></td>
                             <td><span class="badge-type"><?php echo ucfirst($row['type']); ?></span></td>
                             <td><?php echo $row['annee']; ?></td>
@@ -113,9 +114,9 @@ $result = mysqli_query($conn, $query);
 
         <section id="ajout-direct" class="glass-section">
             <h3><i class="fas fa-plus-circle"></i> Ajouter un contenu</h3>
-            
+
             <form action="dashboard.php" method="POST" class="add-form">
-                <div class="form-row">   
+                <div class="form-row">
                     <input type="text" name="titre" placeholder="Titre..." required>
                     <select name="type" id="type_select" onchange="toggleInputs()">
                         <option value="film">Film</option>
@@ -123,8 +124,8 @@ $result = mysqli_query($conn, $query);
                         <option value="animé">Animé</option>
                     </select>
                 </div>
-                
-                <div class="form-row">   
+
+                <div class="form-row">
                     <input type="text" name="genre" placeholder="Genre (Action, Drame...)">
                     <input type="number" name="année" placeholder="Année de sortie">
                 </div>
@@ -134,14 +135,14 @@ $result = mysqli_query($conn, $query);
                     <input type="number" name="episodes" placeholder="Nombre d'épisodes" min="0">
                 </div>
 
-                <div class="form-row">   
+                <div class="form-row">
                     <input type="text" name="duree" placeholder="Durée (ex: 2h 15min)">
                     <input type="number" name="note" placeholder="Note / 5" min="1" max="5">
                 </div>
 
                 <input type="text" name="image" placeholder="Lien de l'image (URL)...">
                 <textarea name="synopsis" placeholder="Synopsis..." required></textarea>
-                
+
                 <button type="submit" name="valider_ajout" class="btn-submit">
                     <i class="fas fa-save"></i> Enregistrer dans ma bibliothèque
                 </button>
@@ -152,7 +153,7 @@ $result = mysqli_query($conn, $query);
     <footer style="text-align: center; padding: 20px; color: #888;">
         &copy; 2026 - RecoMédia - Projet Shelly-Linda
     </footer>
-<script src="../js/script.js"></script>    
+    <script src="../js/script.js"></script>
 </body>
 
 </html>

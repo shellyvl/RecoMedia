@@ -50,11 +50,15 @@ $result = mysqli_query($conn, $sql);
         <?php if (isset($_SESSION['pseudo'])): ?>
             <a href="pages/dashboard.php"><i class="fas fa-clapperboard"></i> Tableau de Bord</a>
             <a href="pages/profil.php"><i class="fas fa-user"></i> Mon Profil</a>
+            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+                <a href="pages/admin.php" style="color: #ffcc00;"><i class="fas fa-user-shield"></i> Panel Admin</a>
+            <?php endif; ?>
             <a href="pages/logout.php"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
         <?php else: ?>
             <a href="pages/login.php"><i class="fas fa-sign-in-alt"></i> Connexion</a>
             <a href="pages/register.php"><i class="fas fa-user-plus"></i> Inscription</a>
         <?php endif; ?>
+
     </nav>
 
     <main>
@@ -90,39 +94,45 @@ $result = mysqli_query($conn, $sql);
             <div class="grid-container">
                 <?php
                 // Vérification s'il y a des résultats dans la BDD
-                if (mysqli_num_rows($result) > 0) :
-                    while ($row = mysqli_fetch_assoc($result)) :
-                ?>
-                    <article class="card">
-                        <div class="card-badge"><?php echo ucfirst($row['type']); ?></div>
+                if (mysqli_num_rows($result) > 0):
+                    while ($row = mysqli_fetch_assoc($result)):
+                        ?>
+                        <article class="card">
+                            <div class="card-badge"><?php echo ucfirst($row['type']); ?></div>
 
-                        <div class="card-image-container">
-                            <img src="<?php echo $row['image']; ?>" class="card-img" alt="Affiche <?php echo htmlspecialchars($row['titre']); ?>">
-                        </div>
-
-                        <div class="card-content">
-                            <h3><?php echo $row['titre']; ?></h3>
-
-                            <div class="note-container">
-                                <span class="stars">
-                                    <?php
-                                    for ($i = 0; $i < $row['note']; $i++) {echo "★";}
-                                    for ($i = $row['note']; $i < 5; $i++) {echo "☆";}
-                                     ?>
-                                </span>
-                                <span class="rating-value"><?php echo $row['note']; ?>/5</span>
+                            <div class="card-image-container">
+                                <img src="<?php echo $row['image']; ?>" class="card-img"
+                                    alt="Affiche <?php echo htmlspecialchars($row['titre']); ?>">
                             </div>
-                            
-                            <a href="pages/detail.php?id=<?php echo $row['id']; ?>" class="btn-minimal">
-                                Voir les détails <span>&rarr;</span>
-                            </a>
-                        </div>
-                    </article>
-                <?php
+
+                            <div class="card-content">
+                                <h3><?php echo $row['titre']; ?></h3>
+
+                                <div class="note-container">
+                                    <span class="stars">
+                                        <?php
+                                        for ($i = 0; $i < $row['note']; $i++) {
+                                            echo "★";
+                                        }
+                                        for ($i = $row['note']; $i < 5; $i++) {
+                                            echo "☆";
+                                        }
+                                        ?>
+                                    </span>
+                                    <span class="rating-value"><?php echo $row['note']; ?>/5</span>
+                                </div>
+
+                                <a href="pages/detail.php?id=<?php echo $row['id']; ?>" class="btn-minimal">
+                                    Voir les détails <span>&rarr;</span>
+                                </a>
+                            </div>
+                        </article>
+                        <?php
                     endwhile;
-                else : 
-                ?>
-                    <p style="text-align: center; width: 100%; color: #aaa;">Aucun contenu trouvé. Ajoutez votre premier film !</p>
+                else:
+                    ?>
+                    <p style="text-align: center; width: 100%; color: #aaa;">Aucun contenu trouvé. Ajoutez votre premier
+                        film !</p>
                 <?php endif; ?>
             </div>
 
@@ -134,4 +144,5 @@ $result = mysqli_query($conn, $sql);
     </footer>
     <script src="js/script.js"></script>
 </body>
+
 </html>
