@@ -1,0 +1,555 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{pifont}
+\usepackage{newunicodechar}
+\newunicodechar{★}{\ding{72}}
+\newunicodechar{☆}{\ding{73}}
+\usepackage{array}
+\usepackage{float}
+\geometry{margin=2.5cm}
+
+% --- Packages pour faire le code SQL ---
+\usepackage{listings}
+\usepackage{xcolor}
+
+% --- Configuration des couleurs ---
+\definecolor{codegray}{rgb}{0.95,0.95,0.95}
+\definecolor{keywordblue}{rgb}{0.13,0.13,0.8}
+\definecolor{stringred}{rgb}{0.8,0.1,0.1}
+
+\lstset{
+    backgroundcolor=\color{codegray},
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{keywordblue}\bfseries,
+    stringstyle=\color{stringred},
+    commentstyle=\color{gray}\itshape,
+    breaklines=true,
+    showstringspaces=false,
+    frame=single,
+    rulecolor=\color{lightgray},
+    extendedchars=true, 
+    literate={★}{{\ding{72}}}1 {☆}{{\ding{73}}}1 % "Traduit" les étoiles dans le code
+}
+\usepackage{eso-pic} % Indispensable pour l'image de fond (Bordure)
+\usepackage{hyperref} % Pratique pour rendre le lien GitHub cliquable
+
+% --- Définition de l'image de fond (la bordure sur le côté) ---
+\newcommand\BackgroundPic{%
+    \put(0,0){%
+        \parbox[b][\paperheight]{\paperwidth}{%
+            \includegraphics[height=0.45\paperheight]{images/Bordure.png}%
+            \vfill
+        }
+    }
+}
+\begin{document}
+%----------------------------------------------------------------------------------------
+%	PAGE DE GARDE (Style Wizard Battleship)
+%----------------------------------------------------------------------------------------
+
+\begin{titlepage}
+    \newgeometry{top=2.5cm, bottom=1.5cm, left=2.5cm, right=1cm}
+    \AddToShipoutPicture*{\BackgroundPic}
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/logo_Paris_Nanterre_couleur_RVB.png}\\[1.5cm]
+    {\Large Licence MIASHS parcours MIAGE — Deuxième année}\\[1.5cm]
+    {\huge \bfseries Rapport de projet Développement Web}\\[1cm]
+    {\Huge \color{red} \textbf{RECOMÉDIA}}\\[0.5cm]
+    {\large \textit{Votre plateforme de recommandations culturelles}}\\[1cm]
+    \includegraphics[width=0.55\textwidth]{images/logo4.png}\\[1.5cm]
+    \vfill 
+
+    \begin{tabular}{ll}
+        \vspace{0.2cm} & \\ % Petit espace
+        \textbf{Enseignante référente :} & Mme. Faten Hedjaj \\
+        \\[0.3cm]
+        \textbf{Auteur :} & 42013418 Rakotoarivelo Shelly-Linda \\
+    \end{tabular}
+    
+    \vspace{1.5cm} 
+    
+    \textbf{Projet réalisé du 31 janvier 2026 au \today} \\[0.5cm]
+    \textbf{Code source complet :} \\
+    \url{https://github.com/shellyvl/RecoMedia}
+    
+    \restoregeometry  
+\end{titlepage}
+
+% --- Page de remerciements ---
+\section*{Remerciements}
+\addcontentsline{toc}{section}{Remerciements} % On force l'ajout dans la table des matières
+
+Je tiens à remercier ma professeure responsable de l'UE pour ses enseignements qui m'ont permis d'acquérir les bases solides du développement Web. Ce projet en totale autonomie a été l'occasion de mettre en pratique les concepts théoriques vus en cours et de me confronter aux réalités de la programmation "Full Stack" (de la conception de la base de données jusqu'à l'intégration du Front-end).
+
+\newpage 
+\tableofcontents
+\newpage
+
+%--------------------------------------------------
+\section{Introduction}
+
+\subsection{Contexte du projet}
+Ce projet a été réalisé dans le cadre de ma formation universitaire, avec pour objectif la conception et le développement complet d'une application web dynamique. Le cahier des charges m'imposait de construire un projet "Full Stack" de A à Z : modélisation d'une base de données relationnelle, développement Back-end, et création d'une interface Front-end interactive. Il s'agissait de mettre en pratique les concepts fondamentaux du web tout en garantissant la sécurité et la cohérence des données manipulées.
+
+\subsection{Genèse du projet : Le défi technique}
+Le choix de mon sujet s'est porté sur une plateforme de recommandations culturelles. Initialement, j'aurais pu me contenter d'un simple catalogue d'œuvres statique. Cependant, cette approche me semblait trop simple techniquement pour un projet universitaire de ce niveau. 
+
+Pour élever le défi, j'ai décidé d'orienter l'architecture autour des interactions sociales et de la gestion des droits. Le véritable enjeu technique n'était plus seulement d'afficher des données, mais de sécuriser un espace multi-utilisateurs. Cela impliquait d'implémenter un système d'authentification robuste (hachage des mots de passe), de gérer des sessions hiérarchisées (Visiteurs, Membres, Administrateurs), et de garantir l'intégrité de la base de données (modérations, suppressions en cascade) face aux actions imprévisibles des utilisateurs.
+
+\subsection{Le concept de RecoMédia}
+Pensé pour les amateurs de cinéma et de pop culture, le fruit de mon travail est "RecoMédia", votre bibliothèque culturelle personnelle. L'idée fondatrice est d'offrir un espace convivial d'échange qui s'articule autour de quatre objectifs majeurs : \textbf{Découvrir} de nouvelles œuvres, \textbf{Partager} ses propres recommandations, \textbf{Noter} les contenus via un système d'avis, et \textbf{Consulter} les profils des autres cinéphiles.
+
+L'utilisateur ne se contente pas de consulter le catalogue : il en est l'acteur principal. Il peut enrichir la base de données via son tableau de bord personnalisé, laisser des avis détaillés avec un système de notation, et interagir avec les recommandations des autres membres. De son côté, l'administrateur dispose d'un panel de modération global pour maintenir la qualité des échanges. C'est cet équilibre entre l'autonomie laissée aux utilisateurs et le contrôle strict des données en Back-end qui définit l'identité de mon application.
+
+\newpage
+
+%--------------------------------------------------
+\section{Fonctionnalités}
+
+\subsection{Fonctionnalités de l'application}
+
+Afin de répondre aux objectifs fixés, l'application intègre un ensemble de fonctionnalités réparties selon le niveau d'habilitation de l'utilisateur (Visiteur, Membre, Administrateur).
+
+\subsection{Sécurité et Authentification}
+\begin{itemize}
+    \item Création de compte avec vérification de la confirmation du mot de passe.
+    \item Connexion sécurisée avec hachage cryptographique des mots de passe.
+    \item Gestion des sessions PHP pour maintenir l'état de connexion à travers les différentes pages et protéger les routes privées.
+    \item Déconnexion sécurisée détruisant les variables de session.
+\end{itemize}
+
+\subsection{Espace Public et Consultation}
+\begin{itemize}
+    \item \textbf{Catalogue dynamique :} Parcourir l'ensemble des œuvres (Films, Séries, Animés) triées par date d'ajout.
+    \item \textbf{Moteur de recherche :} Filtrer instantanément les contenus par titre ou par catégorie via la barre de recherche.
+    \item \textbf{Fiches détaillées :} Consulter les informations complètes d'une œuvre (synopsis, genre, année, durée/saisons, affiche visuelle).
+    \item \textbf{Lecture des avis :} Visualiser les notes et lire les critiques laissées par la communauté.
+    \item \textbf{Profils publics :} Visiter les profils des autres membres pour consulter leurs statistiques et leurs dernières contributions.
+\end{itemize}
+
+\subsection{Espace Privé et Gestion (CRUD)}
+\begin{itemize}
+    \item \textbf{Tableau de bord (CRUD) :} Ajouter de nouvelles recommandations via un formulaire dynamique (les champs s'adaptent selon s'il s'agit d'un film ou d'une série). Le membre peut également modifier ou supprimer ses propres contenus.
+    \item \textbf{Gestion du profil personnel :} Éditer sa propre biographie et suivre l'évolution de ses statistiques (compteur d'œuvres ajoutées et d'avis postés).
+    \item \textbf{Système d'évaluation :} Publier un avis textuel sur une œuvre, accompagné d'une note sur 5.
+    \item \textbf{Modération personnelle :} Modifier la note et le texte de ses propres commentaires, ou les supprimer à tout moment.
+\end{itemize}
+
+\subsection{Espace Administration}
+\begin{itemize}
+    \item \textbf{Panel de contrôle global :} Accéder à une interface de supervision réservée, listant tous les membres inscrits et toutes les œuvres de la base de données.
+    \item \textbf{Modération des contenus :} Supprimer définitivement une œuvre de la plateforme.
+    \item \textbf{Gestion des utilisateurs :} Bannir un membre du site. Cette action déclenche un script de "suppression en cascade" nettoyant automatiquement la base de tous ses avis et contenus associés.
+\end{itemize}
+\newpage
+%--------------------------------------------------
+\section{Conception}
+
+La conception de RecoMédia s'appuie sur la modélisation UML (Unified Modeling Language) afin de structurer les interactions et l'architecture des données avant le développement.
+
+%--------------------------------------------------
+\subsection{Diagramme de cas d'utilisation}
+
+Le diagramme de cas d'utilisation est une étape cruciale de la conception. Il permet de formaliser les besoins du système en définissant les interactions entre les acteurs externes et les fonctionnalités de RecoMédia. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{diagrammes/cas_utilisation.png}
+    \caption{Diagramme de cas d'utilisation de RecoMédia}
+    \label{fig: Diagramme de cas d'utilisation}
+\end{figure}
+
+\subsubsection{Acteurs du système}
+Notre application fait intervenir trois acteurs compte tenu du déroulement et de la complémentarité des opérations :
+
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.5} % Donne un peu d'espace aux lignes
+    \begin{tabular}{|p{3.5cm}|p{11.5cm}|}
+    \hline
+    \textbf{Acteurs} & \textbf{Description} \\ \hline
+    \textbf{L'administrateur} & 1. Authentification \newline 
+    2. Modération globale : supprimer n'importe quel contenu ou commentaire \newline 
+    3. Gestion des utilisateurs : bannir un membre (suppression en cascade) \newline 
+    4. Déconnexion \\ \hline
+    \textbf{Le Membre} & Il bénéficie de la plupart des fonctions interactives : \newline 
+    1. Créer un compte (s'inscrire) \newline 
+    2. Authentification \newline 
+    3. Gestion de son profil (bio) \newline 
+    4. Gestion de ses recommandations : Ajouter, modifier, supprimer \newline 
+    5. Gestion de ses commentaires : Ajouter, modifier, supprimer \newline
+    6. Déconnexion \\ \hline
+    \textbf{Le Visiteur} & 1. Consulter le catalogue public et lire les avis \newline 
+    2. Effectuer des recherches d'œuvres \\ \hline
+    \end{tabular}
+    \caption{Description des Acteurs du système}
+\end{table}
+
+\subsubsection{Description textuelle du cas : "Ajouter une recommandation"}
+Conformément aux méthodologies de conception, voici le détail du scénario principal de l'application :
+\begin{itemize}
+    \item \textbf{Acteur principal :} Membre connecté.
+    \item \textbf{Pré-conditions :} L'utilisateur doit être authentifié et se trouver sur son tableau de bord.
+    \item \textbf{Scénario nominal :}
+    \begin{enumerate}
+        \item L'utilisateur accède au formulaire d'ajout.
+        \item Il saisit les informations (Titre, Type, Synopsis, Image).
+        \item Si le type choisi est "Série", des champs dynamiques (Saisons/Épisodes) apparaissent via JavaScript.
+        \item L'utilisateur valide le formulaire.
+        \item Le système vérifie les données et crée l'entrée dans la base MySQL.
+    \end{enumerate}
+    \item \textbf{Post-conditions :} L'œuvre est ajoutée au catalogue et associée à l'ID de l'utilisateur.
+\end{itemize}
+
+Pour compléter cette description, le diagramme d'activité suivant (Figure \ref{fig:activite_ajout}) illustre le flux logique du script, notamment les étapes de validation et de sécurisation des données avant l'insertion en base.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{diagrammes/activite_ajout.png}
+    \caption{Diagramme d'activité : Processus d'ajout de contenu}
+    \label{fig:activite_ajout}
+\end{figure}
+\newpage
+%--------------------------------------------------
+\subsection{Diagramme de classes}
+
+Le diagramme de classes (Figure \ref{fig:classe}) représente la structure statique de la base de données de RecoMédia. Il permet de définir les entités, leurs attributs ainsi que les relations logiques qui les unissent. \textit{(Le dictionnaire des données détaillé et l'implémentation physique sont présentés dans la Section 5).}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{diagrammes/classes.png}
+    \caption{Structure relationnelle de la base de données RecoMédia}
+    \label{fig:classe}
+\end{figure}
+
+\textbf{Règles de gestion principales :}
+L'intégrité du système est garantie par des relations de clés étrangères. Par exemple, un commentaire est obligatoirement rattaché à un contenu cible et à un utilisateur source. La suppression d'un compte entraîne automatiquement la \textit{suppression en cascade} de ses contenus et avis associés.
+\newpage
+%--------------------------------------------------
+\subsection{Diagrammes de séquence}
+
+Les diagrammes de séquence illustrent la dynamique du système en montrant l'ordre chronologique des messages échangés entre l'utilisateur et les composants techniques. J'ai modélisé les deux processus fondamentaux du parcours utilisateur.
+
+\subsubsection{Scénario 1 : Authentification d'un membre}
+
+Ce premier diagramme illustre la logique de vérification lors de la connexion, incluant les alternatives (succès ou échec) en fonction de la validation du mot de passe haché.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{diagrammes/seq_auth.png}
+    \caption{Diagramme de séquence : Processus d'authentification}
+    \label{fig:seq_auth}
+\end{figure}
+
+\textbf{Pré condition :} \\
+L'utilisateur possède déjà un compte et se trouve sur la page de connexion.
+
+\textbf{Scénario normal :}
+\begin{enumerate}
+    \item L'utilisateur saisit son email et son mot de passe.
+    \item Le système interroge la base de données pour trouver l'email correspondant.
+    \item Si l'email existe, le système compare le mot de passe saisi avec l'empreinte hachée via la fonction PHP \texttt{password\_verify()}.
+    \item Si la correspondance est validée, le système initialise les variables de session (\texttt{\$\_SESSION}).
+    \item L'utilisateur est identifié et redirigé vers son profil.
+\end{enumerate}
+
+\textbf{Post condition :} \\
+L'utilisateur est connecté, sa session est active, et il accède aux fonctionnalités privées.
+
+\vspace{0.5cm} % Ajoute un petit espace visuel
+\newpage
+\subsubsection{Scénario 2 : Ajout d'une nouvelle recommandation}
+
+Une fois authentifié, l'utilisateur peut enrichir le catalogue. Ce diagramme détaille le flux d'insertion sécurisée d'une nouvelle œuvre.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{diagrammes/sequence.png}
+    \caption{Diagramme de séquence : Ajout d'une recommandation}
+    \label{fig:sequence}
+\end{figure}
+
+\textbf{Pré condition :} \\
+L'opération d'ajout de recommandation doit être demandée. \\
+Le membre doit être préalablement authentifié (Session active).
+
+\textbf{Scénario normal :}
+\begin{enumerate}
+    \item Le membre remplit le formulaire d'ajout d'œuvre.
+    \item Le système (serveur PHP) vérifie la validité des champs saisis et confirme que la session est active.
+    \item Le membre valide la saisie (envoi des données via POST).
+    \item Le système exécute la requête SQL préparée (INSERT) vers la base de données MySQL.
+    \item Les données sont enregistrées avec succès dans la table \texttt{contenus}.
+    \item Le système affiche un message de confirmation et redirige le membre vers son tableau de bord.
+\end{enumerate}
+
+\textbf{Post condition :} \\
+L'œuvre est ajoutée au catalogue avec succès et rattachée à l'identifiant du membre.
+\newpage
+%--------------------------------------------------
+\section{Base de données et Requêtes SQL}
+
+La modélisation conceptuelle a été implémentée physiquement via le SGBD \textbf{MySQL}. L'interaction avec la base de données a été développée en PHP en utilisant l'extension \textbf{MySQLi}.
+
+\subsection{Dictionnaire des données détaillé}
+
+Pour garantir la pérennité de l'application, la base de données \texttt{recomedia} est divisée en trois tables principales, reliées par des clés étrangères.
+
+\textbf{Table 1 : utilisateurs}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|p{7cm}|}
+    \hline
+    \textbf{Attribut} & \textbf{Type} & \textbf{Rôle / Contrainte} \\
+    \hline
+    id & INT & Clé primaire (auto-incrément) \\
+    pseudo & VARCHAR(50) & Nom d'affichage du membre (Unique) \\
+    email & VARCHAR(100) & Identifiant de connexion (Unique) \\
+    mot\_de\_passe & VARCHAR(255) & Empreinte cryptographique (Hachée) \\
+    role & VARCHAR(20) & Niveau d'accès (membre ou admin) \\
+    bio & TEXT & Biographie modifiable depuis le profil \\
+    \hline
+    \end{tabular}
+\end{table}
+
+\textbf{Table 2 : contenus}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|p{7cm}|}
+    \hline
+    \textbf{Attribut} & \textbf{Type} & \textbf{Rôle / Contrainte} \\
+    \hline
+    id & INT & Clé primaire (auto-incrément) \\
+    titre & VARCHAR(255) & Titre de l'œuvre \\
+    type & VARCHAR(50) & Catégorie (Film, Série, Animé) \\
+    genre & VARCHAR(100) & Genre de l'œuvre (Action, Drame...) \\
+    annee & INT & Année de sortie \\
+    duree & VARCHAR(50) & Durée du film ou des épisodes \\
+    saisons & INT & Nombre de saisons (spécifique aux séries) \\
+    episodes & INT & Nombre d'épisodes (spécifique aux séries) \\
+    image & VARCHAR(255) & URL de l'affiche de l'œuvre \\
+    synopsis & TEXT & Résumé de l'œuvre \\
+    note & INT & Note moyenne ou note de l'auteur (sur 5) \\
+    id\_utilisateur & INT & Clé étrangère (auteur de la recommandation) \\
+    \hline
+    \end{tabular}
+\end{table}
+
+\textbf{Table 3 : commentaires}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|p{7cm}|}
+    \hline
+    \textbf{Attribut} & \textbf{Type} & \textbf{Rôle / Contrainte} \\
+    \hline
+    id & INT & Clé primaire (auto-incrément) \\
+    id\_contenu & INT & Clé étrangère (Cible de l'avis) \\
+    pseudo & VARCHAR(50) & Clé étrangère (Auteur de l'avis) \\
+    texte & TEXT & Corps de l'avis \\
+    note & INT & Note attribuée (de 1 à 5) \\
+    \hline
+    \end{tabular}
+\end{table}
+
+\subsection{Requêtes SQL Majeures (CRUD)}
+Voici un aperçu des requêtes codées dans l'application pour manipuler ces données, avec une mise en évidence de la syntaxe :
+
+\subsubsection*{Lecture complexe (SELECT avec Jointure)}
+Pour l'affichage du panel administrateur, une jointure relationnelle est nécessaire afin de récupérer les contenus tout en affichant le pseudo de l'auteur :
+\begin{lstlisting}[language=SQL]
+SELECT contenus.*, utilisateurs.pseudo AS auteur 
+FROM contenus 
+LEFT JOIN utilisateurs ON contenus.id_utilisateur = utilisateurs.id 
+ORDER BY contenus.id DESC;
+\end{lstlisting}
+
+\subsubsection*{Insertion sécurisée (INSERT)}
+Lors de l'inscription d'un membre (\texttt{register.php}), le mot de passe est systématiquement haché via \texttt{password\_hash()} avant l'insertion en base :
+\begin{lstlisting}[language=SQL]
+INSERT INTO utilisateurs (pseudo, email, mot_de_passe) 
+VALUES ('$pseudo', '$email', '$mdp_hache');
+\end{lstlisting}
+
+\subsubsection*{Suppression logique en cascade (DELETE)}
+Afin de préserver l'intégrité de la base lors du bannissement d'un membre (\texttt{supprimer\_user.php}), un script PHP se charge de supprimer les données dans l'ordre hiérarchique pour éviter les données orphelines :
+\begin{lstlisting}[language=SQL]
+DELETE FROM commentaires WHERE pseudo = '$pseudo_a_bannir';
+DELETE FROM contenus WHERE id_utilisateur = $id_a_bannir;
+DELETE FROM utilisateurs WHERE id = $id_a_bannir;
+\end{lstlisting}
+
+\subsection{Implémentations techniques remarquables}
+
+Au-delà des opérations de base (CRUD), plusieurs fonctionnalités avancées ont été développées pour sécuriser l'application et enrichir l'expérience utilisateur :
+
+\begin{itemize}
+    \item \textbf{Sécurité cryptographique et Contrôle d'accès :} Les mots de passe ne sont jamais stockés en clair (sécurisés via \texttt{password\_hash()} et \texttt{password\_verify()}). De plus, chaque page sensible vérifie strictement la session active (\texttt{\$\_SESSION['user\_id']}), avec un blocage supplémentaire empêchant l'escalade de privilèges vers le panel administrateur.
+    \item \textbf{Prévention des failles web (SQLi et XSS) :} Toutes les requêtes sont protégées contre les injections SQL grâce au nettoyage des saisies par \texttt{mysqli\_real\_escape\_string()}. Lors de l'affichage, les failles XSS sont neutralisées en convertissant les caractères spéciaux via \texttt{htmlspecialchars()}.
+    \item \textbf{Moteur de recherche dynamique :} La page d'accueil intègre une barre de recherche fonctionnelle. Le script PHP capture la saisie en méthode GET et modifie la requête SQL initiale en y ajoutant une clause conditionnelle pour filtrer le catalogue :
+    \begin{lstlisting}[language=PHP]
+    $sql = "SELECT * FROM contenus ORDER BY id DESC";
+    if (isset($_GET['recherche']) && !empty($_GET['recherche'])) {
+        $recherche = mysqli_real_escape_string($conn, $_GET['recherche']);
+        $sql = "SELECT * FROM contenus WHERE titre LIKE '%$recherche%' OR type LIKE '%$recherche%'";
+    }
+    \end{lstlisting}
+    \item \textbf{Système d'avis dynamique :} Sur la page des œuvres (\texttt{detail.php}), l'affichage des notes s'adapte visuellement. Au lieu d'utiliser de multiples conditions lourdes, j'ai optimisé le code en utilisant la fonction native PHP \texttt{str\_repeat()} pour générer dynamiquement la jauge d'étoiles :
+    \begin{lstlisting}[language=PHP]
+    echo str_repeat("★", $com['note']) . str_repeat("☆", 5 - $com['note']);
+    \end{lstlisting}
+    Des contrôles de session garantissent ensuite que seul l'auteur d'un avis peut le modifier ou le supprimer.
+    \item \textbf{Requêtes statistiques avancées :} Les pages de profils utilisent des fonctions d'agrégation SQL (\texttt{COUNT(*)}) pour calculer et afficher en temps réel l'implication de la communauté (nombre d'avis postés et de recommandations ajoutées).
+\end{itemize}
+\newpage
+%--------------------------------------------------
+\section{Environnement technique et Structure du projet}
+
+\subsection{Outils et Technologies}
+Afin de développer cette plateforme, je me suis appuyée sur l'écosystème suivant :
+\begin{itemize}
+    \item \textbf{Serveur et Logique (Back-end) :} PHP 8 couplé à un serveur local (XAMPP) pour le traitement des données et la gestion des sessions.
+    \item \textbf{Base de données :} MySQL pour le stockage persistant, interrogé via \texttt{MySQLi}.
+    \item \textbf{Interface (Front-end) :} HTML5, CSS3 (utilisation de variables globales et d'effets Glassmorphism) et Vanilla JavaScript pour rendre les formulaires interactifs.
+    \item \textbf{Éditeur de code :} Visual Studio Code.
+\end{itemize}
+
+\subsection{Architecture des fichiers (Arborescence)}
+Pour garantir la maintenabilité du code, le projet a été structuré de manière modulaire :
+
+\begin{verbatim}
+Recomedia/
+|-- recomedia.sql         # Script d'exportation de la base de données
+|-- index.php             # Page d'accueil (Catalogue public et recherche)
+|-- connexion.php         # Script global de connexion à la BDD MySQLi
+|
+|-- /css
+|   |-- style.css         # Feuille de style (Variables, Dark Mode, Glassmorphism)
+|
+|-- /js
+|   |-- script.js         # Scripts dynamiques (Formulaire interactif, Bio)
+|
+|-- /images
+|   |-- logo4.png         # Identité visuelle du site
+|   |-- fond-cinema
+|
+\-- /pages                # Dossier regroupant la logique métier et les vues PHP
+    |
+    |   [Authentification]
+    |-- login.php         # Traitement de connexion et création de session
+    |-- register.php      # Inscription 
+    |-- logout.php        # Destruction de la session
+    |
+    |   [Espace Membres]
+    |-- dashboard.php     # Tableau de bord (Ajout de contenus et gestion)
+    |-- profil.php        # Espace personnel (Statistiques, modification Bio)
+    |-- profil_public.php # Vue des statistiques d'un autre membre
+    |-- modifier.php      # Formulaire de mise à jour d'un contenu
+    |-- supprimer.php     # Script de suppression ciblée d'un contenu
+    |-- detail.php        # Fiche d'une œuvre et système de commentaires
+    |
+    |-- [Espace Admin]
+    |-- admin.php         # Panel de supervision (Listing global)
+    |-- supprimer_user.php     # Script de bannissement avec suppression en cascade         
+\end{verbatim}
+
+
+%--------------------------------------------------
+\section{Interface du site et Expérience Utilisateur (UX)}
+
+Pour garantir une expérience utilisateur optimale et immersive, j'ai conçu une interface graphique inspirée des salles de cinéma. L'intégration d'un thème sombre (Dark Mode) associé à des effets de transparence modernes (Glassmorphism) permet de mettre en valeur les affiches des films tout en reposant les yeux de l'utilisateur. L'architecture a été pensée pour séparer intuitivement les espaces publics de consultation des espaces privés de gestion (tableaux de bord).
+
+\subsection{Catalogue public}
+La page d'accueil (Figure \ref{fig:accueil}) est accessible à tous. Elle génère dynamiquement les cartes des œuvres à partir de la base de données et intègre une barre de recherche.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/accueil.jpeg}
+    \caption{Interface de la page d'accueil (Catalogue dynamique)}
+    \label{fig:accueil}
+\end{figure}
+\newpage
+
+\subsection{Espace Membre (Tableau de bord)}
+L'espace privé (Figure \ref{fig:dash}) permet aux utilisateurs d'interagir avec la base de données via un formulaire d'ajout rendu "intelligent" grâce à JavaScript, qui adapte les champs selon que l'on choisisse un film ou une série.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/dashboard.jpeg}
+    \caption{Tableau de bord membre et formulaire d'ajout}
+    \label{fig:dash}
+\end{figure}
+\newpage
+
+\subsection{Fiche détaillée et Avis}
+Lorsqu'un utilisateur clique sur une œuvre, il accède à ses détails et à l'espace de discussion (Figure \ref{fig:detail}). C'est ici que les membres peuvent publier, modifier ou supprimer leurs avis avec un système de notation par étoiles.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/detail.jpeg}
+    \caption{Page de détail d'une œuvre et système de commentaires}
+    \label{fig:detail}
+\end{figure}
+
+\subsection{Panel Administrateur}
+L'interface de modération (Figure \ref{fig:admin}) est strictement réservée au rôle "admin". Elle permet la gestion globale du site, incluant la suppression des contenus inappropriés et le bannissement des utilisateurs.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/admin.png}
+    \caption{Interface sécurisée réservée à l'administrateur}
+    \label{fig:admin}
+\end{figure}
+
+\newpage
+%--------------------------------------------------
+\section{Difficultés rencontrées et Solutions}
+
+La réalisation de ce projet "Full Stack" en totale autonomie a soulevé plusieurs défis techniques que j'ai dû surmonter, allant de la configuration du serveur jusqu'à l'expérience utilisateur :
+
+\subsection{Défis d'infrastructure et serveur}
+\begin{itemize}
+    \item \textbf{Conflit de port sur le serveur de base de données :} Lors de la configuration initiale de l'environnement de développement, la connexion à la base MySQL échouait (le port par défaut 3306 étant bloqué ou occupé par un autre service). \textit{Solution :} J'ai dû reconfigurer le serveur local pour écouter sur le port 3307, et modifier ma fonction PHP \texttt{mysqli\_connect()} en lui passant explicitement ce nouveau paramètre de port.
+
+    \item \textbf{Les erreurs de redirection et le cycle des sessions :} Lors de la mise en place des redirections après connexion ou déconnexion (\texttt{header("Location: ...")}), j'ai été confrontée à l'erreur fatale \textit{"Cannot modify header information"}. \textit{Solution :} J'ai dû restructurer mes fichiers pour garantir que la fonction \texttt{session\_start()} et les traitements d'en-tête soient systématiquement placés au tout début des scripts, avant le moindre affichage HTML.
+\end{itemize}
+
+\subsection{Défis de logique applicative et UX}
+\begin{itemize}
+    \item \textbf{La gestion de l'intégrité référentielle lors des suppressions :} Lors du bannissement d'un utilisateur depuis le panel administrateur, je risquais de créer des contenus "orphelins" dans la base de données. \textit{Solution :} J'ai développé un script PHP séquentiel qui supprime d'abord les avis de l'utilisateur, puis ses recommandations, et enfin son compte, reproduisant ainsi une logique de suppression en cascade sécurisée.
+ 
+    \item \textbf{L'interactivité du formulaire sans rechargement :} L'affichage des champs "Saisons" et "Épisodes" devait être conditionné par le choix "Série" ou "Film" dans le menu déroulant. \textit{Solution :} J'ai intégré un script JavaScript (\texttt{toggleInputs()}) écoutant les changements de la balise \texttt{<select>} pour modifier dynamiquement l'attribut \texttt{display} du DOM sans avoir à recharger la page PHP.
+\end{itemize}
+\newpage
+%--------------------------------------------------
+\section{Conclusion et Perspectives}
+
+\subsection{Bilan du projet}
+Le développement de \textbf{RecoMédia} a été une expérience extrêmement formatrice, me permettant d'appliquer concrètement l'ensemble des concepts abordés en cours de programmation Web. De la conception UML rigoureuse à l'implémentation de la base de données (MySQLi), en passant par la structuration des sessions PHP et du rendu Front-end, j'ai pu couvrir et maîtriser le spectre complet du développement "Full Stack".
+
+Le système remplit son cahier des charges : offrir une plateforme fluide, sécurisée et interactive pour partager des recommandations cinématographiques.
+
+\subsection{Perspectives d'évolution}
+Si l'application devait être étendue, plusieurs pistes d'évolution seraient pertinentes :
+\begin{itemize}
+    \item \textbf{Upload d'images natif :} Remplacer le champ texte de l'URL par un véritable téléversement de fichier local (via l'attribut \texttt{enctype="multipart/form-data"}) géré avec la superglobale \texttt{\$\_FILES} en PHP.
+    \item \textbf{Consommation d'une API externe :} Connecter le site à l'API de \textit{TMDB (The Movie Database)} pour importer automatiquement les données officielles (affiches, synopsis) afin de faciliter la saisie.
+    \item \textbf{Système de pagination :} Mettre en place un système de pagination (\texttt{LIMIT} et \texttt{OFFSET} en SQL) sur la page d'accueil pour optimiser les performances lorsque le catalogue de recommandations s'agrandira.
+\end{itemize}
+
+\newpage
+
+%--------------------------------------------------
+\section{Bibliographie et Webographie}
+\begin{itemize}
+    \item \textbf{Documentation officielle PHP :} Manuel PHP et fonctions natives (ex: sessions, \texttt{password\_hash}) - \texttt{https://www.php.net/docs.php}
+    \item \textbf{Documentation MySQL :} Référence du langage SQL et de l'extension \texttt{MySQLi} - \texttt{https://dev.mysql.com/doc/}
+    \item \textbf{Création graphique :} Le logo original du projet (pellicule et cœur) a été conçu sur mesure à l'aide de la plateforme de création graphique Canva - \texttt{https://www.canva.com/}
+    \item \textbf{Ressources photographiques et iconographiques :} L'image d'arrière-plan du site (thème cinéma) a été sourcée via Pinterest (utilisée à des fins strictement pédagogiques). Utilisation de la bibliothèque FontAwesome pour les icônes de l'interface - \texttt{https://fontawesome.com/}
+    \item \textbf{Ressources typographiques :} Polices d'écriture importées depuis Google Fonts.
+\end{itemize}
+
+\end{document}
